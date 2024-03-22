@@ -1,19 +1,29 @@
-package com.hgr.demo.web;
+package com.hgr.demo.dto;
 
+import com.hgr.demo.entity.Member;
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
+@Getter
 public class CustomUserDetails implements UserDetails {
-    private String username;
-    private String password;
+    private String memLgnId;
+    private String memLgnPw;
+    private String memNm;
+    private String memCno;
+
+    private Member member;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = authorities;
+    public CustomUserDetails(Member member) {
+        this.memLgnId = member.getMemLgnId();
+        this.memLgnPw = member.getMemLgnPw();
+        this.memNm = member.getMemNm();
+        this.memCno = member.getMemCno();
+        this.authorities = Collections.emptyList();;
     }
 
     @Override
@@ -23,12 +33,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return memLgnPw;
     }
 
     @Override
     public String getUsername() {
-        return username;
+        return memLgnId;
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.hgr.demo.dto;
+package com.hgr.demo.entity;
 
 import java.util.List;
 
@@ -16,7 +16,9 @@ import lombok.Data;
 public class Member {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int memId;
+    private Long memId;
+    private String memLgnId;
+    private String memLgnPw;
     private String memNm;
     private String memCno;
     @OneToMany (mappedBy = "member")

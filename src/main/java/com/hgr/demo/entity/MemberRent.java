@@ -1,4 +1,4 @@
-package com.hgr.demo.dto;
+package com.hgr.demo.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +15,7 @@ import lombok.Data;
 public class MemberRent {
 	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int memRentId;
+    private Long memRentId;
 
     @ManyToOne
     @JoinColumn(name = "mem_id")
