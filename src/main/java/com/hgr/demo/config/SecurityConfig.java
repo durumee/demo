@@ -43,7 +43,6 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        //.requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/home").authenticated()
                         .requestMatchers(request -> request.getServletPath().endsWith(".html")).permitAll()
@@ -67,8 +66,8 @@ public class SecurityConfig {
                         .permitAll()
                 )
 
-//                .httpBasic(Customizer.withDefaults())
                 .userDetailsService(memberService)
+//                .httpBasic(Customizer.withDefaults())
 //                .passwordEncoder(passwordEncoder())
                 .build();
 
