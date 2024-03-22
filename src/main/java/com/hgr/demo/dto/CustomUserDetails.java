@@ -15,7 +15,6 @@ public class CustomUserDetails implements UserDetails {
     private String memNm;
     private String memCno;
 
-    private Member member;
     private Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(Member member) {
@@ -23,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
         this.memLgnPw = member.getMemLgnPw();
         this.memNm = member.getMemNm();
         this.memCno = member.getMemCno();
-        this.authorities = Collections.emptyList();;
+        this.authorities = Collections.emptyList();
     }
 
     @Override
