@@ -1,12 +1,18 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>홈</title>
 </head>
 <body>
 
-<p>홈이요</p>
+<p>인증된 분만 오실 수 있는 마이홈이요😜</p>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">로그아웃</button>
+</form>
 
 </body>
 </html>

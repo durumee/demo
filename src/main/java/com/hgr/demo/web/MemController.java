@@ -1,6 +1,6 @@
 package com.hgr.demo.web;
 
-import com.hgr.demo.dto.CustomUserDetails;
+import com.hgr.demo.dto.MemberDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +13,7 @@ public class MemController {
     @GetMapping("/")
     public String index(Authentication authentication, Model model) {
         if (authentication != null && authentication.isAuthenticated()) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            MemberDTO userDetails = (MemberDTO) authentication.getPrincipal();
             model.addAttribute("userDetails", userDetails);
         }
 

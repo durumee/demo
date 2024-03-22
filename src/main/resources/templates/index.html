@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<p>template 메인화면인가요</p>
+<p>😀 메인화면인가요 😀</p>
 <div sec:authorize="isAuthenticated()">
     <p>로그인한 사용자: <span th:text="${userDetails.username}"></span></p>
     <p>로그인한 이름: <span th:text="${userDetails.memNm}"></span></p>
     <p>로그인한 연락처: <span th:text="${userDetails.memCno}"></span></p>
     <p>권한: <span th:text="${userDetails.authorities}"></span></p>
+    <p>시큐리티: <span sec:authentication="principal.username"></span></p>
     <!-- 추가적인 사용자 정보 출력 -->
     <form th:action="@{/logout}" method="post">
         <button type="submit">로그아웃</button>
@@ -23,6 +24,7 @@
 <div sec:authorize="!isAuthenticated()">
     <p>로그인이 필요합니다.</p>
     <a th:href="@{/login}">로그인</a>
+    <a th:href="@{/home}">마이홈</a>
 </div>
 </body>
 </html>

@@ -1,16 +1,62 @@
 package com.hgr.demo.dto;
 
-import com.hgr.demo.entity.MemberRent;
-import lombok.Data;
+import com.hgr.demo.entity.Member;
+import lombok.Getter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 
-@Data
-public class MemberDTO {
-    private Long memId;
-    private String memPw;
+@Getter
+public class MemberDTO implements UserDetails {
+    private String memLgnId;
+    private String memLgnPw;
     private String memNm;
     private String memCno;
-    private List<MemberRent> listMemberRent;
 
+    private Collection<? extends GrantedAuthority> authorities;
+
+    public MemberDTO(Member member) {
+        this.memLgnId = member.getMemLgnId();
+        this.memLgnPw = member.getMemLgnPw();
+        this.memNm = member.getMemNm();
+        this.memCno = member.getMemCno();
+        this.authorities = Collections.emptyList();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return memLgnPw;
+    }
+
+    @Override
+    public String getUsername() {
+        return memLgnId;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

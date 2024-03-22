@@ -1,26 +1,24 @@
 package com.hgr.demo.service;
 
+import com.hgr.demo.dto.MemberDTO;
 import com.hgr.demo.entity.Member;
 import com.hgr.demo.repo.MemberRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional
-@RequiredArgsConstructor
-public class MemberService {
-
-    @Autowired
+public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
-    public Member getMemberByLgnId(String lgnId) {
-        return memberRepository.findByMemLgnId(lgnId).orElseThrow();
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
     }
 
-    public void saveMember(Member member) {
-        memberRepository.save(member);
+    @Override
+    public UserDetails loadUserByUsername(String memLgnId) throws UsernameNotFoundException {
+        Member member = memberRepository.findByMemLgnId(memLgnId).orElseThrow(() -> new UsernameNotFoundException("User not found with memLgnId: " + memLgnId));
+        return new MemberDTO(member);
     }
-
 }

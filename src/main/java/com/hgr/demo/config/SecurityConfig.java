@@ -1,6 +1,6 @@
 package com.hgr.demo.config;
 
-import com.hgr.demo.service.CustomUserDetailsService;
+import com.hgr.demo.service.MemberService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,10 +16,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final CustomUserDetailsService customUserDetailsService;
+    private final MemberService memberService;
 
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
-        this.customUserDetailsService = customUserDetailsService;
+    public SecurityConfig(MemberService memberService) {
+        this.memberService = memberService;
     }
 
     @Bean
@@ -27,10 +27,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    //    @Bean
+//    @Bean
 //    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
 //        return authenticationConfiguration.getAuthenticationManager();
 //    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity hs) throws Exception {
 
@@ -43,7 +44,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         //.requestMatchers(PathRequest.toH2Console()).permitAll()
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/home").permitAll()
+                        .requestMatchers("/home").authenticated()
                         .requestMatchers(request -> request.getServletPath().endsWith(".html")).permitAll()
                         //.requestMatchers("/posts/**", "/login/**").hasRole("USER")
                         .anyRequest().authenticated()
@@ -66,7 +67,7 @@ public class SecurityConfig {
                 )
 
 //                .httpBasic(Customizer.withDefaults())
-                .userDetailsService(customUserDetailsService)
+                .userDetailsService(memberService)
 //                .passwordEncoder(passwordEncoder())
                 .build();
 
@@ -78,4 +79,3 @@ public class SecurityConfig {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }
-
