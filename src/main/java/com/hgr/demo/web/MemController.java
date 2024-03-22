@@ -12,10 +12,11 @@ public class MemController {
 
     @GetMapping("/")
     public String index(Authentication authentication, Model model) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            MemberDTO userDetails = (MemberDTO) authentication.getPrincipal();
-            model.addAttribute("userDetails", userDetails);
-        }
+//        if (authentication != null && authentication.isAuthenticated()) {
+//            MemberDTO userDetails = (MemberDTO) authentication.getPrincipal();
+//            System.out.println("로그인 ID :: " + userDetails.getMemLgnId());
+//            model.addAttribute("userDetails", userDetails);
+//        }
 
         return "index";
     }

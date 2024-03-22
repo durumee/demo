@@ -34,6 +34,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity hs) throws Exception {
+        //TODO: API 인증 전략 추가 필요
 
         return hs.csrf(AbstractHttpConfigurer::disable)
 

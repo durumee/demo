@@ -10,12 +10,11 @@
 <body>
 <p>😀 메인화면인가요 😀</p>
 <div sec:authorize="isAuthenticated()">
-    <p>로그인한 사용자: <span th:text="${userDetails.username}"></span></p>
-    <p>로그인한 이름: <span th:text="${userDetails.memNm}"></span></p>
-    <p>로그인한 연락처: <span th:text="${userDetails.memCno}"></span></p>
-    <p>권한: <span th:text="${userDetails.authorities}"></span></p>
-    <p>시큐리티: <span sec:authentication="principal.username"></span></p>
-    <!-- 추가적인 사용자 정보 출력 -->
+    <p>로그인한 사용자: <span sec:authentication="principal.username"></span></p>
+    <p>로그인한 이름: <span sec:authentication="principal.memNm"></span></p>
+    <p>로그인한 연락처: <span sec:authentication="principal.memCno"></span></p>
+    <p>권한: <span sec:authentication="principal.authorities"></span></p>
+    <a th:href="@{/home}">마이홈</a>
     <form th:action="@{/logout}" method="post">
         <button type="submit">로그아웃</button>
     </form>
