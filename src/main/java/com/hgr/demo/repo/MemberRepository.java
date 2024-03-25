@@ -10,7 +10,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long>, QuerydslPredicateExecutor<Member> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 //    private final JPAQueryFactory queryFactory;
 //    QMember qm = QMember.member;
 //    JPAQuery<?> query = new JPAQuery<Void>(entityManager);

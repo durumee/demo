@@ -1,5 +1,6 @@
 package com.hgr.demo.web;
 
+import com.hgr.demo.dto.MemberDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -7,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@Slf4j
 @Controller
+@Slf4j
 public class MemController {
 
     @GetMapping("/")
@@ -27,15 +28,15 @@ public class MemController {
         return "home/home";
     }
 
+    @GetMapping("/info")
+    @ResponseBody
+    public String info() {
+        return "info data";
+    }
+
     @GetMapping("/login")
     public String login() {
         return "member/login";
-    }
-
-    @GetMapping("/login-process")
-    public String loginProc() {
-        //로그인
-        return "로그인";
     }
 
     @GetMapping("/member/join")
@@ -46,6 +47,7 @@ public class MemController {
     @GetMapping("/member/join-process")
     @ResponseBody
     public String joinProc() {
+        log.info("::가입처리");
         //가입처리
         return "hi";
     }
