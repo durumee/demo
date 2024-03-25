@@ -1,7 +1,10 @@
 package com.hgr.demo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.hgr.demo.entity.Member;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,6 +12,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Getter
+@Setter
+@NoArgsConstructor
 public class MemberDTO implements UserDetails {
     private String memLgnId;
     private String memLgnPw;

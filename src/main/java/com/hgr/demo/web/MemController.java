@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
@@ -24,7 +26,14 @@ public class MemController {
     }
 
     @GetMapping("/home")
-    public String home() {
+    public String home(@ModelAttribute MemberDTO memberDTO, Model model) {
+        log.info(memberDTO.getMemLgnId());
+
+        if (memberDTO == null) {
+            memberDTO = new MemberDTO();
+        }
+
+        model.addAttribute("memberDTO", memberDTO);
         return "home/home";
     }
 
@@ -48,6 +57,7 @@ public class MemController {
     @ResponseBody
     public String joinProc() {
         log.info("::가입처리");
+
         //가입처리
         return "hi";
     }

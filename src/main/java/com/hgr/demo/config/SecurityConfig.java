@@ -55,7 +55,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login-process")    //로그인 페이지를 login으로 하면 이 항목을 별도 지정해야 무한루프가 없음
                         .usernameParameter("mem_lgn_id")    //아이디 값
                         .passwordParameter("mem_lgn_pw")    //비밀번호 값
-                        .defaultSuccessUrl("/")
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
 
