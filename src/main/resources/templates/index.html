@@ -15,6 +15,8 @@
     <p>로그인한 연락처: <span sec:authentication="principal.memCno"></span></p>
     <p>권한: <span sec:authentication="principal.authorities"></span></p>
     <a th:href="@{/home}">마이홈</a>
+    <a th:href="@{/rent}">렌트</a>
+    <a th:href="@{/test}">렌트(데이터만들기)</a>
     <form th:action="@{/logout}" method="post">
         <button type="submit">로그아웃</button>
     </form>

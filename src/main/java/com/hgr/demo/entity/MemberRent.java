@@ -9,11 +9,10 @@ import lombok.Data;
 public class MemberRent {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column
     private Long memRentId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mem_id")
     private Member member;
-
-
 }

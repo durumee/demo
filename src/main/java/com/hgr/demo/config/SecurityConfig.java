@@ -17,9 +17,11 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     private final MemberService memberService;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfig(MemberService memberService) {
+    public SecurityConfig(MemberService memberService, CustomAccessDeniedHandler accessDeniedHandler) {
         this.memberService = memberService;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -27,6 +29,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
 //    @Bean
 //    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
 //        return authenticationConfiguration.getAuthenticationManager();
@@ -44,9 +51,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/home").authenticated()
+                        .requestMatchers("/test").permitAll()
+                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .requestMatchers("/home").hasRole("ADM")
+//                        .requestMatchers("/home").authenticated()
                         .requestMatchers(request -> request.getServletPath().endsWith(".html")).permitAll()
-                        //.requestMatchers("/posts/**", "/login/**").hasRole("USER")
+                        .requestMatchers("/posts/**", "/login/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
 
@@ -69,13 +79,10 @@ public class SecurityConfig {
                 .userDetailsService(memberService)
 //                .httpBasic(Customizer.withDefaults())
 //                .passwordEncoder(passwordEncoder())
+                .exceptionHandling(handling -> handling
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
                 .build();
 
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 }

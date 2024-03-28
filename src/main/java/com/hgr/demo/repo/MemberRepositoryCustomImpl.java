@@ -4,14 +4,16 @@ import com.hgr.demo.entity.Member;
 import com.hgr.demo.entity.QMember;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-public class MemberRepositoryImpl implements MemberRepositoryCustom {
+@Repository
+public class MemberRepositoryCustomImpl implements MemberRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-    public MemberRepositoryImpl(EntityManager entityManager) {
+    public MemberRepositoryCustomImpl(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
     }
 

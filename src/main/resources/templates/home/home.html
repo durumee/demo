@@ -11,9 +11,11 @@
 <p>인증된 분만 오실 수 있는 마이홈이요😜</p>
 
 <div>
-    <form th:action="@{/home}" th:object="${memberDTO}" method="get">
-        <input type="text" th:field="*{memLgnId}">
+    <form th:action="@{/home}" th:object="${testDTO}" method="get">
+        <input type="text" th:field="*{testNm}">
+        <input type="text" th:field="*{testSubDTO.extNm}">
 <!--        <input type="text" th:name="mem_lgn_id" th:value="*{memLgnId}">-->
+        <button type="submit" th:formaction="@{/home}" method="get">전송</button>
     </form>
 </div>
 
