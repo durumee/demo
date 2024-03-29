@@ -37,6 +37,7 @@ public class MemberService implements UserDetailsService {
         Pageable pageable = PageRequest.of(pageNo, 10, Sort.by("memRentId").descending());
         return mrRepo.findAll(pageable);
     }
+
     public void addRent() throws Exception {
         List<MemberRent> mrList = new ArrayList<>();
         MemberRent mrObj = new MemberRent();
@@ -65,8 +66,8 @@ public class MemberService implements UserDetailsService {
         //권한 정보를 스프링 시큐리티 권한 문자열로 변환
         List<GrantedAuthority> authorities = new ArrayList<>();
         memRoles.forEach(memRole -> {
-                authorities.add(new SimpleGrantedAuthority(("ROLE_" + memRole.getRoleNm())));
-            }
+                    authorities.add(new SimpleGrantedAuthority(("ROLE_" + memRole.getRoleNm())));
+                }
         );
 
         //100. (DB) 회원권한 테이블 생성

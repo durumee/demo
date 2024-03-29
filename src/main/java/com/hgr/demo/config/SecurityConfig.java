@@ -29,11 +29,11 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring()
-                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return web -> web.ignoring()
+//                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+//    }
 //    @Bean
 //    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
 //        return authenticationConfiguration.getAuthenticationManager();
@@ -41,7 +41,6 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity hs) throws Exception {
-        //TODO: API 인증 전략 추가 필요
 
         return hs.csrf(AbstractHttpConfigurer::disable)
 
@@ -50,14 +49,15 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/test").permitAll()
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers("/home").hasRole("ADM")
+                                .requestMatchers("/").permitAll()
+                                .requestMatchers(PathRequest.toH2Console()).permitAll()
+                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                                .requestMatchers("/home").hasRole("ADM")
+                                .requestMatchers("/test").permitAll()
 //                        .requestMatchers("/home").authenticated()
-                        .requestMatchers(request -> request.getServletPath().endsWith(".html")).permitAll()
-                        .requestMatchers("/posts/**", "/login/**").hasRole("USER")
-                        .anyRequest().authenticated()
+                                .requestMatchers(request -> request.getServletPath().endsWith(".html")).permitAll()
+                                .requestMatchers("/posts/**", "/login/**").hasRole("USER")
+                                .anyRequest().authenticated()
                 )
 
                 .formLogin(formLogin -> formLogin
@@ -80,7 +80,12 @@ public class SecurityConfig {
 //                .httpBasic(Customizer.withDefaults())
 //                .passwordEncoder(passwordEncoder())
                 .exceptionHandling(handling -> handling
-                        .accessDeniedHandler(accessDeniedHandler)
+                                .accessDeniedHandler(accessDeniedHandler)
+                        //.authenticationEntryPoint()   //401
+                        //.authenticationFailureHandler()
+                        //.authenticationSuccessHandler()
+                        //.logoutSuccessHandler()
+                        //.sessionInformationExpiredStrategy()
                 )
                 .build();
 
