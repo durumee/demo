@@ -7,34 +7,26 @@ import com.hgr.demo.entity.MemberRent;
 import com.hgr.demo.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @Slf4j
 public class MemController {
-    private final PasswordEncoder passwordEncoder;
     private final MemberService memberService;
 
-    public MemController(PasswordEncoder passwordEncoder, MemberService memberService) {
-        this.passwordEncoder = passwordEncoder;
+    public MemController(MemberService memberService) {
         this.memberService = memberService;
     }
 
     @GetMapping("/")
     public String index(Authentication authentication, Model model) {
-        log.info(passwordEncoder.encode("1234"));
-//        if (authentication != null && authentication.isAuthenticated()) {
-//            MemberDTO userDetails = (MemberDTO) authentication.getPrincipal();
-//            System.out.println("로그인 ID :: " + userDetails.getMemLgnId());
-//            model.addAttribute("userDetails", userDetails);
-//        }
-
         return "index";
     }
 

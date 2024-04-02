@@ -57,7 +57,7 @@ public class MemberService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String memLgnId) throws UsernameNotFoundException {
-        mrRepo.findAll();
+        log.info(":: authenticate :: ");
         //로그인ID로 사용자 정보 조회
         Member member = memberRepository.findByDslOne(memLgnId).orElseThrow(() -> new UsernameNotFoundException("User not found with memLgnId: " + memLgnId));
         //로그인ID로 권한 정보 조회

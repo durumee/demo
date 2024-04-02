@@ -1,26 +1,30 @@
 package com.hgr.demo.config;
 
+import com.hgr.demo.jwt.JwtAuthenticationFilter;
+import com.hgr.demo.jwt.JwtTokenProvider;
 import com.hgr.demo.service.MemberService;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
     private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final CustomAccessDeniedHandler accessDeniedHandler;
 
-    public SecurityConfig(MemberService memberService, CustomAccessDeniedHandler accessDeniedHandler) {
+    public SecurityConfig(MemberService memberService, JwtTokenProvider jwtTokenProvider, CustomAccessDeniedHandler accessDeniedHandler) {
         this.memberService = memberService;
+        this.jwtTokenProvider = jwtTokenProvider;
         this.accessDeniedHandler = accessDeniedHandler;
     }
 
@@ -29,64 +33,38 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return web -> web.ignoring()
-//                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-//    }
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity hs) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
-        return hs.csrf(AbstractHttpConfigurer::disable)
-
-                .headers(headerConfig -> headerConfig
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable)
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                                .requestMatchers("/").permitAll()
-                                .requestMatchers(PathRequest.toH2Console()).permitAll()
-                                .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                                .requestMatchers("/home").hasRole("ADM")
-                                .requestMatchers("/test").permitAll()
-//                        .requestMatchers("/home").authenticated()
-                                .requestMatchers(request -> request.getServletPath().endsWith(".html")).permitAll()
-                                .requestMatchers("/posts/**", "/login/**").hasRole("USER")
-                                .anyRequest().authenticated()
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/api/auth").permitAll()
+                        .anyRequest().authenticated()
                 )
 
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")    //커스텀 로그인 페이지 주소
-                        .loginProcessingUrl("/login-process")    //로그인 페이지를 login으로 하면 이 항목을 별도 지정해야 무한루프가 없음
-                        .usernameParameter("mem_lgn_id")    //아이디 값
-                        .passwordParameter("mem_lgn_pw")    //비밀번호 값
-                        .defaultSuccessUrl("/", true)
-                        .permitAll()
-                )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(AbstractHttpConfigurer::disable)
 
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .permitAll()
-                )
-
-                .userDetailsService(memberService)
-//                .httpBasic(Customizer.withDefaults())
-//                .passwordEncoder(passwordEncoder())
+//                .userDetailsService(memberService)
                 .exceptionHandling(handling -> handling
-                                .accessDeniedHandler(accessDeniedHandler)
+                                .accessDeniedHandler(accessDeniedHandler)   //403
                         //.authenticationEntryPoint()   //401
                         //.authenticationFailureHandler()
                         //.authenticationSuccessHandler()
                         //.logoutSuccessHandler()
                         //.sessionInformationExpiredStrategy()
                 )
+
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
 
     }
