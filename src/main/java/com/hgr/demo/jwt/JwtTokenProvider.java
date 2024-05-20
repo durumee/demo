@@ -48,16 +48,26 @@ public class JwtTokenProvider {
         );
     }
 
-    public String createToken(Authentication authentication) {
+    public String generateToken(Authentication authentication) {
         log.info("cr token :: {}", expirationMs);
         Date now = new Date();
-        Date expiration = new Date(now.getTime() + expirationMs);
+        Date expiration = new Date(System.currentTimeMillis() + 1000 * 60 * 15); // 15분
 
         return Jwts.builder()
                 .subject(authentication.getName())
                 .claim("username", authentication.getName())
                 .issuedAt(now)
                 .expiration(expiration)
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public String generateRefreshToken(Authentication authentication) {
+        return Jwts.builder()
+                .setSubject(authentication.getName())
+                .claim("username", authentication.getName())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // 7일
                 .signWith(secretKey)
                 .compact();
     }
