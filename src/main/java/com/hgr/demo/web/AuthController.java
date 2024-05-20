@@ -10,10 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
@@ -29,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<MemberDTO> authorize(@RequestBody MemberDTO loginDto) {
+    public ResponseEntity<String> authorize(@RequestBody MemberDTO loginDto) {
 //        memberService.loadUserByUsername();
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
@@ -41,6 +38,25 @@ public class AuthController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Bearer " + jwt);
 
-        return new ResponseEntity<>(new MemberDTO(), httpHeaders, HttpStatus.OK);
+        return ResponseEntity.ok().headers(httpHeaders).body("Login successful");
     }
-}
+
+    @GetMapping("/validate-token")
+    public ResponseEntity<String> validateToken(@RequestHeader("Authorization") String token) {
+        try {
+            // 토큰에서 "Bearer " 접두사 제거
+            token = token.replace("Bearer ", "");
+
+            // 토큰 검증
+            boolean isValid = tokenProvider.validateToken(token);
+
+            if (isValid) {
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
+    }

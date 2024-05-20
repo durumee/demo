@@ -43,7 +43,6 @@ public class MemberService implements UserDetailsService {
         MemberRent mrObj = new MemberRent();
         Member member = new Member(1L);
 
-
         for (int i = 1; i <= 50; ++i) {
             mrObj = new MemberRent();
             mrObj.setMemRentId(Integer.toUnsignedLong(i));
@@ -56,12 +55,13 @@ public class MemberService implements UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String memLgnId) throws UsernameNotFoundException {
-        log.info(":: authenticate :: ");
+    public UserDetails loadUserByUsername(String memLgnId) {
+        log.info(":: authenticate :: {}", memLgnId);
         //로그인ID로 사용자 정보 조회
         Member member = memberRepository.findByDslOne(memLgnId).orElseThrow(() -> new UsernameNotFoundException("User not found with memLgnId: " + memLgnId));
         //로그인ID로 권한 정보 조회
         List<MemberRole> memRoles = memberRepository.findRolesByMemId(member.getMemId());
+        log.info("member :: {}", member.getMemLgnPw());
 
         //권한 정보를 스프링 시큐리티 권한 문자열로 변환
         List<GrantedAuthority> authorities = new ArrayList<>();
